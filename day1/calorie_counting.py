@@ -1,12 +1,14 @@
 #Calorie Counting
 """
-Puzzle input will be the number of calories each Elf carries
+Puzzle answer will be the highest number of calories is carried among the elves
 """
 
-# Read the input file, separate each line for an item and each paragraph for an Elf's inventory 
 file = 'input.txt'
 
-def get_input(input_file):
+# sorts the input, separating each elf as an index with a list as its value
+# and including all its items in the list 
+#returns the list
+def sort_input(input_file):
     with open (input_file) as file:
         inputs = file.readlines()
     storage = [[]]
@@ -20,14 +22,12 @@ def get_input(input_file):
             storage[elf_counter].append(int(line.strip('\n')))
     return storage
 
-elfs_inventories = get_input(file)
+elfs_inventories = sort_input(file)
 
 def get_highest_calories(inventories):
     highest_calories = 0
     for inventory in inventories:
-        current_calories = 0
-        for calories in inventory:
-            current_calories += calories
+        current_calories = sum(inventory)
         if current_calories > highest_calories:
             highest_calories = current_calories
     return highest_calories
