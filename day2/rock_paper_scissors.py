@@ -58,3 +58,47 @@ def total_points(games_history):
     return score
 
 print(total_points(strategy_guide)) #first_answer
+
+"""
+Answer to the second part is the total score, 
+this time reading the file's second column as the way to end the game : X as win, Y as draw and Z as lose
+"""
+new_rules = {
+    'rock': 'A',
+    'paper': 'B',
+    'scissors': 'C'
+}
+strategy_conditions = {
+    'win' : 'Z',
+    'lose' : 'X',
+    'draw' : 'Y'
+}
+ # ex for A Y, opponent chooses rock and I need to draw, so I chose rose 
+def new_total_points(games_history):
+    score = 0
+    for game in games_history:
+        opponent_choice, elf_strategy = game
+        opponent_choice, elf_choice = strategy_handler(opponent_choice, elf_strategy)
+        score += score_checker(opponent_choice, elf_choice)
+    print(score)
+    
+def strategy_handler(opponent_choice, strategy):
+    for key, value in new_rules.items():
+        if opponent_choice == value:
+            opponent_choice = key
+    for key, value in strategy_conditions.items():
+        if strategy == value:
+            strategy = key
+    #at this point we have the opponent's choice and what the user must do
+    #print(opponent_choice, strategy)
+    if strategy == 'lose':
+        elf_choice = win_conditions[opponent_choice]
+    elif strategy == 'win':
+        for key, value in win_conditions.items():
+            if opponent_choice == value:
+                elf_choice = key
+    else:
+        elf_choice = opponent_choice
+    return opponent_choice, elf_choice
+
+new_total_points(strategy_guide)
