@@ -29,3 +29,27 @@ def get_priority_score(inventory):
     return priority_score
 
 print(get_priority_score(rucksack_inventory))
+
+"""
+Answer to the second part 
+is the sum of the priorities of the common item in each group (3 lines = 1 group)
+"""
+def check_badge(group):
+    elf1, elf2, elf3 = group
+    for key, value in priorities.items():
+        if key in elf1 and key in elf2 and key in elf3:
+            return value
+
+def get_group_priorities(inventories):
+    separate_groups = []
+    for i in range(len(inventories)):
+        if i % 3 == 0:
+            separate_groups.append([])
+        separate_groups[i//3].append(inventories[i])
+    priority_score = 0
+    print(separate_groups)
+    for group in separate_groups:
+        priority_score += check_badge(group)
+    return priority_score
+
+print(get_group_priorities(rucksack_inventory))
