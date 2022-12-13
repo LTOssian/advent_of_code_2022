@@ -1,5 +1,5 @@
 """
-Puzzle answer if the total score if a rps game
+Puzzle answer is the total score in a rps game
 """
 file = 'input.txt'
 
