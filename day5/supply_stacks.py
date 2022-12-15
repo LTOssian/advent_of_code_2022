@@ -1,55 +1,51 @@
 """
 First answer is the letters that end up on top of each stack at the end of the procedure
 """
-file = "input.txt" #I altered it to have room at the top, otherwise it doesn't work. Will refactor someday
+from collections import defaultdict
 
-def sort_stack(stack):
-    new_stack = [stack[i] + stack[i+1] + stack[i+2] for i in range(0, len(stack), 4)]
-    return new_stack
-
+file = "input.txt"
 def sort_input(file):
     with open(file) as file:
-        inputs = file.read()
-        print(inputs)
-    stacks, procedure = inputs.split('\n\n')
-    stacks = [stack for stack in stacks.split('\n') if stack != stacks.split('\n')[-1]]
+        lines = file.read()
+    return lines.split('\n\n')
 
-    print(stacks)
-    sorted_stack = [sort_stack(stack) for stack in stacks]
-    print(sorted_stack)
-    sorted_procedure = [[i.split()[1], i.split()[3], i.split()[5]] for i in procedure.split('\n')]
-    print(sorted_procedure)
-    return sorted_stack, sorted_procedure
+crates, instructions = sort_input(file)
+sorted_crates = defaultdict(list)
+sorted_crates2 = defaultdict(list)
+for stack in crates.split('\n')[:-1][::-1]:
+    i = 1
+    while i < len(stack):
+        if stack[i] != ' ':
+            sorted_crates[(i+3)//4].append(stack[i])
+            sorted_crates2[(i+3)//4].append(stack[i])
+        i += 4
+print(crates)
 
-def proceed(stacks, procedure):
-    count = 0
-    for step in procedure:
-        print(procedure.index(step))
-        moves, move_from, move_to = step 
-        for a_line in stacks:
-            if count == int(moves):
-                break
-            if a_line[int(move_from)-1] != '   ':
-                
-                reversed_stack = [x for x in stacks]
-                reversed_stack.reverse()
-                for line in reversed_stack:
-                    if line[int(move_to)-1] != '   ':
-                        continue
-                    else:
-                        count += 1
-                        line[int(move_to)-1] = a_line[int(move_from)-1]
-                        a_line[int(move_from)-1] = '   '
-                        break
-        print(count) 
-        count = 0
-        for e in stacks:
-            print(e)
+print(sorted_crates)
 
-usable_stack, usable_procedures = sort_input(file)
-proceed(usable_stack, usable_procedures)            
+for moves in instructions.split('\n'):
+    _, num, _, source, _, destination = moves.split(" ")
+    num, source, destination = int(num), int(source), int(destination)
+
+    for i in range(num):
+        sorted_crates[destination].append(sorted_crates[source].pop())
+
+answer1 = ''.join([x[-1] for x in sorted_crates.values()])
+print(answer1)
 
 """
-Second answer is the letters that end up on top,
-but the arrangement has to move every item at once instead of one at a time.
+Second answer is the same thing but this time I must move crates all at once
 """
+
+for moves in instructions.split('\n'):
+    _, num, _, source, _, destination = moves.split(" ")
+    num, source, destination = int(num), int(source), int(destination)
+
+    sorted_crates2[destination].extend(sorted_crates2[source][-num:])
+    sorted_crates2[source] = sorted_crates2[source][:-num]
+
+
+answer2 = ''.join([x[-1] for x in sorted_crates2.values()])
+print(answer2)
+
+#discovered defaultdict() and extend() methods
