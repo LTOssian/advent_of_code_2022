@@ -37,8 +37,8 @@ class System:
             i += 1
         print(sliced_data)
 
-        for key, values in sliced_data.items():
-            if self.isMarker(values):
+        for key, value in sliced_data.items():
+            if self.isMarker(value):
                 self.first_marker_signal = key + self.sequence
                 return self.first_marker_signal
 
