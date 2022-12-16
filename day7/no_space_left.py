@@ -14,9 +14,9 @@ def sort_input(file):
 lines = sort_input(file)
 
 class FileSystem:
-    files_size = defaultdict(int)
     max_usable_space = 70000000 - 30000000
     def __init__(self, commands, limit): #command: str & limit: int
+        self.files_size = defaultdict(int)
         self.commands = commands
         self.limit = limit
 
@@ -60,3 +60,4 @@ elf_device = FileSystem(lines, 100000)
 elf_device.sort_system()
 answer1 = elf_device.get_answer()
 answer2 = elf_device.get_free_space()
+print(answer2)
