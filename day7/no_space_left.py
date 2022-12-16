@@ -15,7 +15,8 @@ lines = sort_input(file)
 
 class FileSystem:
     files_size = defaultdict(int)
-    def __init__(self, commands, limit):
+    max_usable_space = 70000000 - 30000000
+    def __init__(self, commands, limit): 
         self.commands = commands
         self.limit = limit
 
@@ -33,10 +34,9 @@ class FileSystem:
                 continue
             else: #at this point, it can only be (size, fileName)
                 size = int(keyword[0])
-                print(current_path, size)
-                for i in range(1, len(current_path)+1):
+                for i in range(1, len(current_path) + 1):
                     self.files_size['/'.join(current_path[:i])] += size
-
+        print(self.files_size)
 #get the sum of all of the directories with a total size of at most {self.limit}
     def get_answer(self):
         sum = 0
@@ -44,6 +44,22 @@ class FileSystem:
             if t_size <= self.limit:
                 sum += t_size
         return sum
-answer1 = FileSystem(lines, 100000)
-answer1.sort_system()
-print(answer1.get_answer())
+
+
+#we want to free at least 3000000000 of space so that the system can run
+    def get_free_space(self):
+        #total space of the system - the total space i can use not to break the system
+        current_space_to_free = self.files_size['/'] - self.max_usable_space
+
+        min_space_to_delete = self.files_size['/']
+        for dir, t_size in self.files_size.items():
+            if t_size >= current_space_to_free and t_size < min_space_to_delete:
+                min_space_to_delete = t_size
+        return min_space_to_delete
+
+elf_device = FileSystem(lines, 100000)
+elf_device.sort_system()
+answer1 = elf_device.get_answer()
+print(answer1)
+answer2 = elf_device.get_free_space()
+print(answer2)
