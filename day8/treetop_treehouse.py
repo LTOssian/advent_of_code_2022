@@ -8,3 +8,5 @@ def sort_input(file):
     with open(file) as f:
         file = f.read().split('\n')
     return file
+
+parsed_tree = sort_input(file)
