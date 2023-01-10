@@ -26,6 +26,7 @@ class Map:
         for x in range(self.x_):
             for y in range(self.y_):
                 current_height = self.graphic[x, y]
+                #print(current_height, x, y)
 
                 #search to the left or the current row
                 if y == 0 or np.amax(self.graphic[x, :y]) < current_height:
@@ -44,18 +45,23 @@ class Map:
 
     def get_highest_scenic(self):
         highest_scenic = 1
+
         for x in range(1, self.x_ - 1):
             for y in range(1, self.y_ - 1):
+                #print(f"coordonnées : {x},{y}")
                 current_scenic = 1
                 current_height = self.graphic[x, y]
+                #print(f"current height is {current_height}")
                 cardinal = [self.graphic[:x, y][::-1], self.graphic[x, y+1:], self.graphic[x+1:, y], self.graphic[x, :y][::-1]]
                 for dir in cardinal:
                     count = 0
                     for tree_height in dir:
                         count += 1
+                        #print(count, dir, current_scenic)
                         if tree_height >= current_height or len(dir) == count:
                             current_scenic *= count
                             break
+                #print(current_scenic)
                 if current_scenic > highest_scenic:
                     highest_scenic = current_scenic
         return highest_scenic                 
