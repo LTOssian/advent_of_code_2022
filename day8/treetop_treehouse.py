@@ -18,28 +18,48 @@ class Map:
         self.y_ = len(parsed_forest[0])
 
         self.graphic = np.array(parsed_forest) #numpy array is the best way I found to visualize and access coordinates
-        self.visible_trees = 0
+        self.visible_trees = self.get_visible_trees()
+        self.highest_scenic = self.get_highest_scenic()
 
-    def get_visible_n(self):
-        self.visible_trees = 0
+    def get_visible_trees(self):
+        visible_trees = 0
         for x in range(self.x_):
             for y in range(self.y_):
                 current_height = self.graphic[x, y]
-                #print(current_height, x, y)
 
                 #search to the left or the current row
                 if y == 0 or np.amax(self.graphic[x, :y]) < current_height:
-                    self.visible_trees += 1
+                    visible_trees += 1
                 #search to the right of the current row
                 elif y == self.y_ - 1 or np.amax(self.graphic[x, y+1:]) < current_height:
-                    self.visible_trees += 1
-                #search upward of the current col
+                    visible_trees += 1
+                #sear
+                # ch upward of the current col
                 elif x == 0 or np.amax(self.graphic[:x, y]) < current_height:
-                    self.visible_trees += 1
+                    visible_trees += 1
                 #search downward of the current col
                 elif x == self.x_ - 1 or np.amax(self.graphic[x+1:, y]) < current_height:
-                    self.visible_trees += 1
+                    visible_trees += 1
+        return visible_trees
+
+    def get_highest_scenic(self):
+        highest_scenic = 1
+        for x in range(1, self.x_ - 1):
+            for y in range(1, self.y_ - 1):
+                current_scenic = 1
+                current_height = self.graphic[x, y]
+                cardinal = [self.graphic[:x, y][::-1], self.graphic[x, y+1:], self.graphic[x+1:, y], self.graphic[x, :y][::-1]]
+                for dir in cardinal:
+                    count = 0
+                    for tree_height in dir:
+                        count += 1
+                        if tree_height >= current_height or len(dir) == count:
+                            current_scenic *= count
+                            break
+                if current_scenic > highest_scenic:
+                    highest_scenic = current_scenic
+        return highest_scenic                 
 
 forest = Map(parsed_forest)
-forest.get_visible_n()
 print(forest.visible_trees)
+print(forest.highest_scenic)
